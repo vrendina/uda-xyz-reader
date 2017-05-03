@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_list_article_image"
+                android:layout_width="match_parent"
+                android:layout_height="192dp"
+                android:contentDescription="@string/article_image"
+                tools:src="@drawable/sample"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/scrim"
+                android:contentDescription="@null"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/card_side_margin"
+                android:layout_marginLeft="@dimen/card_side_margin"
+                android:layout_marginEnd="@dimen/card_side_margin"
+                android:layout_marginRight="@dimen/card_side_margin"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/tv_list_title"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="#CCFFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Japanese Fairy Tales"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/tv_list_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#AAFFFFFF"
+                    tools:text="Yei Theodora Ozaki"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/card_side_margin"
+            android:paddingStart="@dimen/card_side_margin"
+            android:paddingEnd="@dimen/card_side_margin"
+            android:paddingRight="@dimen/card_side_margin"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:gravity="center">
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Caption"
+                android:id="@+id/tv_list_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                tools:text="Jun 6th, 2016"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_favorite_border_black_24dp"
+                android:tint="@color/dark"
+                android:contentDescription="@string/add_bookmark"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_bookmark_border_black_24dp"
+                android:tint="@color/dark"
+                android:contentDescription="@string/add_bookmark"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_share_black_24dp"
+                android:tint="@color/dark"
+                android:contentDescription="@string/add_bookmark"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>
