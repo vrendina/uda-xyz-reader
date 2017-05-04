@@ -11,19 +11,20 @@
         android:supportsRtl="true"
         android:theme="@style/XyzTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <activity android:name=".ArticleListActivity"
+        <activity
+            android:name=".ArticleListActivity"
             android:theme="@style/XyzTheme.NoActionBar">
+        </activity>
+
+        <activity android:name=".ArticleDetailActivity"
+            android:theme="@style/ArticleDetailActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
 
-        <activity
-            android:name=".ScrollingActivity"
-            android:theme="@style/XyzTheme.NoActionBar">
         </activity>
     </application>
 
