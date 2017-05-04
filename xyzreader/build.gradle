@@ -34,6 +34,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    //compile "com.android.support:support-compat:25.3.1"
+
     compile "com.android.support:appcompat-v7:$androidSupportVersion"
     compile "com.android.support:design:$androidSupportVersion"
     compile "com.android.support:palette-v7:$androidSupportVersion"
