@@ -35,7 +35,9 @@
             android:scrollbarStyle="outsideOverlay"
             android:paddingLeft="@dimen/list_side_margin"
             android:paddingRight="@dimen/list_side_margin"
-            tools:listitem="@layout/article_list_item"/>
+            tools:listitem="@layout/article_list_item"
+            app:layoutManager="android.support.v7.widget.GridLayoutManager"
+            app:spanCount="@integer/list_grid_span_count"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

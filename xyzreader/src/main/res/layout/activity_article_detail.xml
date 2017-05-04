@@ -15,6 +15,7 @@
         android:theme="@style/XyzTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/ctbl_detail_header"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -50,7 +51,7 @@
                 android:paddingBottom="64dp">
 
                 <TextView
-                    android:id="@+id/tv_list_title"
+                    android:id="@+id/tv_detail_title"
                     style="@style/TextAppearance.AppCompat.Title"
                     android:textColor="#CCFFFFFF"
                     android:layout_width="match_parent"
@@ -60,7 +61,7 @@
                     android:ellipsize="end"/>
 
                 <TextView
-                    android:id="@+id/tv_list_author"
+                    android:id="@+id/tv_detail_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#AAFFFFFF"
@@ -75,7 +76,6 @@
             </LinearLayout>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
@@ -93,7 +93,7 @@
         tools:showIn="@layout/activity_article_detail">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cv_text_container"
+            android:id="@+id/cv_detail_text_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_side_margin"
@@ -104,10 +104,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_side_margin"
+                android:layout_margin="@dimen/detail_text_side_margin"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_detail_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="Jun 6th, 2016" />
@@ -123,11 +124,11 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_share"
+        android:id="@+id/fab_detail_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
-        app:layout_anchor="@id/cv_text_container"
+        app:layout_anchor="@id/cv_detail_text_container"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@drawable/ic_share_black_24dp" />
 

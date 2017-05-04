@@ -14,18 +14,19 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".ArticleListActivity"
-            android:theme="@style/ArticleListActivity">
-        </activity>
-
-        <activity android:name=".ArticleDetailActivity"
-            android:theme="@style/ArticleDetailActivity">
+            android:theme="@style/ArticleListActivity"
+            android:launchMode="singleTop">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
 
+        <activity android:name=".ArticleDetailActivity"
+            android:theme="@style/ArticleDetailActivity"
+            android:parentActivityName=".ArticleListActivity">
         </activity>
     </application>
 

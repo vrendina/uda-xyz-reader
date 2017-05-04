@@ -93,6 +93,6 @@
 
     <string name="article_image">Article Image</string>
     <string name="add_bookmark">Add Bookmark</string>
-    <string name="favorite">Add Favorite</string>
+    <string name="add_favorite">Add Favorite</string>
     <string name="share">Share</string>
 </resources>
