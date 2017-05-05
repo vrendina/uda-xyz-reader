@@ -120,6 +120,40 @@ public class ArticleProvider extends ContentProvider{
     }
 
     @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        switch (matcher.match(uri)) {
+            case CODE_ARTICLE:
+                db.beginTransaction();
+
+                int insertCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                ArticleContract.Article.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                Context context = getContext();
+                if (context != null) {
+                    context.getContentResolver().notifyChange(uri, null);
+                }
+
+                return insertCount;
+
+            default:
+                return super.bulkInsert(uri, values);
+        }
+    }
+
+    @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
 
         int numRowsDeleted;
