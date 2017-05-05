@@ -28,6 +28,12 @@
             android:theme="@style/ArticleDetailActivity"
             android:parentActivityName=".ArticleListActivity">
         </activity>
+        
+        <provider
+            android:authorities="io.levelsoftware.xyzreader"
+            android:name=".data.ArticleProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>
