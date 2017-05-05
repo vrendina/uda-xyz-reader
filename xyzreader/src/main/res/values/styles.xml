@@ -1,10 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="XyzTheme" parent="Theme.AppCompat.Light">
+    <style name="XyzTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
-
     </style>
 
     <style name="XyzTheme.NoActionBar">

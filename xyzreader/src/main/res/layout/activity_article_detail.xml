@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -48,7 +49,7 @@
                 android:layout_marginLeft="@dimen/card_side_margin"
                 android:layout_marginEnd="@dimen/card_side_margin"
                 android:layout_marginRight="@dimen/card_side_margin"
-                android:paddingBottom="64dp">
+                android:paddingBottom="@dimen/detail_content_overlay">
 
                 <TextView
                     android:id="@+id/tv_detail_title"
@@ -67,11 +68,7 @@
                     android:textColor="#AAFFFFFF"
                     tools:text="Yei Theodora Ozaki"
                     android:maxLines="1"
-                    android:ellipsize="end"
-                    android:paddingRight="64dp"
-                    android:paddingEnd="64dp"
-                    android:paddingLeft="0dp"
-                    android:paddingStart="0dp"/>
+                    android:ellipsize="end" />
 
             </LinearLayout>
 
@@ -89,7 +86,7 @@
         android:id="@+id/nsv_detail_text_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_overlapTop="64dp"
+        app:behavior_overlapTop="@dimen/detail_content_overlay"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="io.levelsoftware.xyzreader.ArticleDetailActivity"
         tools:showIn="@layout/activity_article_detail">
@@ -132,6 +129,6 @@
         android:layout_margin="32dp"
         android:layout_gravity="end|bottom"
         android:clickable="true"
-        app:srcCompat="@drawable/ic_share_black_24dp" />
+        app:srcCompat="@drawable/ic_share_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
