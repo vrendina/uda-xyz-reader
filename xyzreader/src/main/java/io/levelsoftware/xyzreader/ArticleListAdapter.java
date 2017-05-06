@@ -17,10 +17,10 @@ import butterknife.ButterKnife;
 
 public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.ArticleCardViewHolder> {
 
-    private ArticleListClickHandler clickHandler;
+    private OnClickListener listener;
 
-    public ArticleListAdapter(ArticleListClickHandler clickHandler) {
-        this.clickHandler = clickHandler;
+    public ArticleListAdapter(OnClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -80,25 +80,25 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
                         liftAnimator.start();
                     }
 
-                    clickHandler.clickListItem(getAdapterPosition());
+                    listener.clickListItem(getAdapterPosition());
                 break;
 
                 case R.id.iv_list_add_bookmark:
-                    clickHandler.clickBookmark(getAdapterPosition());
+                    listener.clickBookmark(getAdapterPosition());
                 break;
 
                 case R.id.iv_list_add_favorite:
-                    clickHandler.clickFavorite(getAdapterPosition());
+                    listener.clickFavorite(getAdapterPosition());
                 break;
 
                 case R.id.iv_list_share:
-                    clickHandler.clickShare(getAdapterPosition());
+                    listener.clickShare(getAdapterPosition());
                 break;
             }
         }
     }
 
-    public interface ArticleListClickHandler {
+    public interface OnClickListener {
         void clickListItem(int position);
         void clickBookmark(int position);
         void clickFavorite(int position);
