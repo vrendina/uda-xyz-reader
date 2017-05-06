@@ -2,8 +2,9 @@
 <resources>
     <color name="primary">@color/light</color>
     <color name="primaryDark">@color/dark</color>
-    <color name="accent">@color/dark</color>
+    <color name="accent">@color/lightGray</color>
 
     <color name="light">#FFFFFF</color>
+    <color name="lightGray">#EEEEEE</color>
     <color name="dark">#757575</color>
 </resources>

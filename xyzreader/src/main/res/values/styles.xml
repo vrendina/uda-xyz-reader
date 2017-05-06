@@ -14,7 +14,7 @@
     <style name="XyzTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="XyzTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="ArticleListActivity" parent="XyzTheme.NoActionBar" />
-    <style name="ArticleDetailActivity" parent="XyzTheme.NoActionBar" />
+    <style name="XyzTheme.ArticleListActivity" parent="XyzTheme.NoActionBar" />
+    <style name="XyzTheme.ArticleDetailActivity" parent="XyzTheme.NoActionBar" />
 
 </resources>

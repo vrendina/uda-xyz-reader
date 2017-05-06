@@ -16,8 +16,8 @@
         android:name=".XyzApplication"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ArticleListActivity"
-            android:theme="@style/ArticleListActivity"
+            android:name=".ui.ArticleListActivity"
+            android:theme="@style/XyzTheme.ArticleListActivity"
             android:launchMode="singleTop">
 
             <intent-filter>
@@ -27,9 +27,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ArticleDetailActivity"
-            android:theme="@style/ArticleDetailActivity"
-            android:parentActivityName=".ArticleListActivity">
+        <activity android:name=".ui.ArticleDetailActivity"
+            android:theme="@style/XyzTheme.ArticleDetailActivity"
+            android:parentActivityName=".ui.ArticleListActivity">
         </activity>
         
         <provider

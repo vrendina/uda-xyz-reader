@@ -1,4 +1,4 @@
-package io.levelsoftware.xyzreader;
+package io.levelsoftware.xyzreader.ui;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.levelsoftware.xyzreader.R;
 
 public class ArticleDetailActivity extends AppCompatActivity {
 

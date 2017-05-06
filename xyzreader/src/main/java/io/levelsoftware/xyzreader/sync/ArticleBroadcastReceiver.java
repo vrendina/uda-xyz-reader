@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import io.levelsoftware.xyzreader.R;
-import timber.log.Timber;
 
 
 public class ArticleBroadcastReceiver extends BroadcastReceiver {
@@ -21,8 +20,6 @@ public class ArticleBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int status = intent.getIntExtra(ArticleService.INTENT_STATUS_CODE, -1);
         String message = intent.getStringExtra(ArticleService.INTENT_STATUS_MESSAGE);
-
-        Timber.d("Received broadcast with status code: " + status);
 
         switch (status) {
             case ArticleService.STATUS_COMPLETE:
@@ -43,6 +40,7 @@ public class ArticleBroadcastReceiver extends BroadcastReceiver {
 
             case ArticleService.STATUS_ERROR_NETWORK_ISSUE:
                 listener.statusErrorNetworkIssue(message);
+                break;
 
             default:
                 listener.statusErrorUnknown(status, message);
