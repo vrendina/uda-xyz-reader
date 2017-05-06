@@ -6,12 +6,12 @@
         android:id="@+id/action_favorite"
         android:icon="@drawable/ic_favorite_border_white_24dp"
         android:title="@string/add_favorite"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     
     <item
         android:id="@+id/action_bookmark"
         android:icon="@drawable/ic_bookmark_border_white_24dp"
         android:title="@string/add_bookmark"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     
 </menu>
