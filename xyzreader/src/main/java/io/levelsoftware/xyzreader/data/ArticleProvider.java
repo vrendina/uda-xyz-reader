@@ -135,6 +135,7 @@ public class ArticleProvider extends ContentProvider{
                                 null,
                                 value
                         );
+                        insertCount++;
                     }
                     db.setTransactionSuccessful();
                 } finally {
