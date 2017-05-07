@@ -1,12 +1,17 @@
 package io.levelsoftware.xyzreader.ui;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
@@ -14,9 +19,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +44,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(R.id.cl_list) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.abl_list_header) AppBarLayout appBarLayout;
+    @BindView(R.id.ctbl_list_header) CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.tb_list_header) Toolbar toolbar;
     @BindView(R.id.srl_article_list) SwipeRefreshLayout refreshLayout;
     @BindView(R.id.rv_article_list) RecyclerView recyclerView;
@@ -43,6 +55,9 @@ public class ArticleListActivity extends AppCompatActivity implements
     private ArticleListAdapter adapter;
     private ArticleBroadcastReceiver receiver;
     private Snackbar snackbar;
+
+    private static final int MAX_RETRY_COUNT = 3;
+    private int retryCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +82,65 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         getSupportLoaderManager().initLoader(ARTICLE_LOADER, null, this);
 
-//        refreshData();
+        // Hack to keep the navigation bar from flashing
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            postponeEnterTransition();
+
+            final View decor = getWindow().getDecorView();
+            decor.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    decor.getViewTreeObserver().removeOnPreDrawListener(this);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        startPostponedEnterTransition();
+                    }
+                    return true;
+                }
+            });
+
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.primaryDark));
+        }
+
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+//            Transition fade = new Fade();
+//            fade.setDuration(2000);
+//            getWindow().setExitTransition(fade);
+//        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+
+//            final Transition exitTransition = getWindow().getExitTransition();
+//
+//            exitTransition.addListener(new Transition.TransitionListener() {
+//                @Override
+//                public void onTransitionStart(Transition transition) {
+//                    Timber.d("Started exit transition");
+//                }
+//
+//                @Override
+//                public void onTransitionEnd(Transition transition) {
+//
+//                }
+//
+//                @Override
+//                public void onTransitionCancel(Transition transition) {
+//
+//                }
+//
+//                @Override
+//                public void onTransitionPause(Transition transition) {
+//
+//                }
+//
+//                @Override
+//                public void onTransitionResume(Transition transition) {
+//
+//                }
+//            });
+
+        }
+
+
     }
 
     @Override
@@ -79,20 +152,39 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        String[] projection = {ArticleContract.Article.COLUMN_SERVER_ID,
+                ArticleContract.Article.COLUMN_AUTHOR,
+                ArticleContract.Article.COLUMN_TITLE,
+                ArticleContract.Article.COLUMN_PUBLISHED_DATE,
+                ArticleContract.Article.COLUMN_PHOTO_URL};
+
+//        int serverIdIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_SERVER_ID);
+//        int authorIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_AUTHOR);
+//        int titleIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_TITLE);
+//        int dateIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_PUBLISHED_DATE);
+//        int photoIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_PHOTO_URL);
+
+
         return new CursorLoader(this,
                 ArticleContract.Article.CONTENT_URI,
-                ArticleContract.Article.COLUMNS.toArray(new String[]{}),
+                projection,
                 null, null, ArticleContract.Article.COLUMN_PUBLISHED_DATE + " DESC");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data.getCount() == 0 && retryCount < MAX_RETRY_COUNT) {
+            refreshData();
+            retryCount++;
+        }
         adapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        refreshLayout.setRefreshing(false);
+        adapter.setCursor(null);
     }
 
 
@@ -121,13 +213,60 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void clickListItem(Article article, ArticleColorPalette palette) {
-        Intent intent = new Intent(this, ArticleDetailActivity.class);
+    public void clickListItem(Article article, ArticleColorPalette palette, List<Pair<View, String>> sharedElements) {
+
+        final Intent intent = new Intent(this, ArticleDetailActivity.class);
 
         intent.putExtra(getString(R.string.intent_article_key), article);
         intent.putExtra(getString(R.string.intent_palette_key), palette);
 
-        startActivity(intent);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            View statusBar = findViewById(android.R.id.statusBarBackground);
+            View navigationBar = findViewById(android.R.id.navigationBarBackground);
+
+            if(navigationBar != null) {
+                sharedElements.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+            }
+
+            if(statusBar != null) {
+                sharedElements.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+            }
+
+            sharedElements.add(Pair.create((View) toolbar, getString(R.string.transition_key_toolbar)));
+//            sharedElements.add(Pair.create((View) collapsingToolbarLayout, getString(R.string.transition_key_toolbar)));
+
+            @SuppressWarnings("unchecked")
+            final Bundle options = ActivityOptions.makeSceneTransitionAnimation(this,
+                    sharedElements.toArray(new Pair[sharedElements.size()])).toBundle();
+
+
+            startActivity(intent, options);
+
+//            toolbar.animate().alpha(0).setListener(new Animator.AnimatorListener() {
+//                @Override
+//                public void onAnimationStart(Animator animation) {
+//
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    startActivity(intent, options);
+//                }
+//
+//                @Override
+//                public void onAnimationCancel(Animator animation) {
+//
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animator animation) {
+//
+//                }
+//            }).start();
+
+        } else {
+            startActivity(intent);
+        }
     }
 
     @Override

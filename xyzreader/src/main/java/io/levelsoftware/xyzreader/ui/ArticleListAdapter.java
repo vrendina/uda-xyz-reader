@@ -1,7 +1,5 @@
 package io.levelsoftware.xyzreader.ui;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,6 +8,7 @@ import android.support.v4.util.LongSparseArray;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.common.collect.ImmutableList;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,15 +58,20 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     public void onBindViewHolder(ArticleCardViewHolder holder, int position) {
         cursor.moveToPosition(position);
 
-        ImmutableList<String> columns = ArticleContract.Article.COLUMNS;
+        int serverIdIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_SERVER_ID);
+        int authorIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_AUTHOR);
+        int titleIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_TITLE);
+        int dateIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_PUBLISHED_DATE);
+        int photoIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_PHOTO_URL);
 
+        // Body is too large and was causing a TransactionTooLarge exception
         Article article = Article.builder()
-                .serverId(cursor.getLong(columns.indexOf(ArticleContract.Article.COLUMN_SERVER_ID)))
-                .author(cursor.getString(columns.indexOf(ArticleContract.Article.COLUMN_AUTHOR)))
-                .title(cursor.getString(columns.indexOf(ArticleContract.Article.COLUMN_TITLE)))
-                .publishedDate(cursor.getString(columns.indexOf(ArticleContract.Article.COLUMN_PUBLISHED_DATE)))
-                .body(cursor.getString(columns.indexOf(ArticleContract.Article.COLUMN_BODY)))
-                .photoUrl(cursor.getString(columns.indexOf(ArticleContract.Article.COLUMN_PHOTO_URL)))
+                .serverId(cursor.getLong(serverIdIndex))
+                .author(cursor.getString(authorIndex))
+                .title(cursor.getString(titleIndex))
+                .publishedDate(cursor.getString(dateIndex))
+                .body("")
+                .photoUrl(cursor.getString(photoIndex))
                 .build();
 
         holder.setArticle(article);
@@ -79,8 +85,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
             Picasso.with(imageView.getContext())
                     .load(article.photoUrl())
-                    .resize(328, 192)
-                    .centerCrop()
                     .into(imageView, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -98,8 +102,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
             Picasso.with(holder.articleImageView.getContext())
                     .load(article.photoUrl())
-                    .resize(328, 192)
-                    .centerCrop()
                     .into(holder.articleImageView);
         }
 
@@ -152,16 +154,24 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.fl_list_item:
-                    // Lift the card if we are on Lollipop or greater
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
-                        AnimatorSet liftAnimator =
-                                (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.lift_on_touch);
 
-                        liftAnimator.setTarget(itemCardView);
-                        liftAnimator.start();
+//                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+//                        AnimatorSet liftAnimator =
+//                                (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.lift_on_touch);
+//
+//                        liftAnimator.setTarget(itemCardView);
+//                        liftAnimator.start();
+//                    }
+
+                    List<Pair<View, String>> sharedElements = new ArrayList<>();
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+                        sharedElements.add(Pair.create((View) titleTextView, v.getContext().getString(R.string.transition_key_title)));
+                        sharedElements.add(Pair.create((View) authorTextView, v.getContext().getString(R.string.transition_key_author)));
+//                        sharedElements.add(Pair.create((View) scrimImageView, v.getContext().getString(R.string.transition_key_scrim)));
+                        sharedElements.add(Pair.create((View) articleImageView, v.getContext().getString(R.string.transition_key_image)));
                     }
 
-                    listener.clickListItem(article, paletteCache.get(article.serverId()));
+                    listener.clickListItem(article, paletteCache.get(article.serverId()), sharedElements);
                 break;
 
                 case R.id.iv_list_add_bookmark:
@@ -180,7 +190,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     }
 
     public interface OnClickListener {
-        void clickListItem(Article article, ArticleColorPalette palette);
+        void clickListItem(Article article, ArticleColorPalette palette, List<Pair<View, String>> sharedElements);
         void clickBookmark(Article article);
         void clickFavorite(Article article);
         void clickShare(Article article);

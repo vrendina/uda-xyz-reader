@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
+    app:cardCornerRadius="0dp"
     android:layout_marginBottom="8dp">
 
     <LinearLayout
@@ -23,17 +24,14 @@
 
             <ImageView
                 android:id="@+id/iv_list_article_image"
+                android:transitionName="@string/transition_key_image"
                 android:layout_width="match_parent"
                 android:layout_height="192dp"
                 android:contentDescription="@string/description_article_image"
                 tools:src="@drawable/sample"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                tools:targetApi="lollipop" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/scrim"
-                android:contentDescription="@null"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,25 +46,29 @@
 
                 <TextView
                     android:id="@+id/tv_list_title"
-                    style="@style/TextAppearance.AppCompat.Title"
+                    android:transitionName="@string/transition_key_title"
                     android:textColor="#CCFFFFFF"
+                    android:textSize="30sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:text="Japanese Fairy Tales"
                     android:maxLines="2"
-                    android:ellipsize="end"/>
+                    android:paddingTop="32dp"
+                    android:ellipsize="end"
+                    tools:targetApi="lollipop" />
 
                 <TextView
                     android:id="@+id/tv_list_author"
+                    android:transitionName="@string/transition_key_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#AAFFFFFF"
                     tools:text="Yei Theodora Ozaki"
                     android:maxLines="1"
-                    android:ellipsize="end" />
+                    android:ellipsize="end"
+                    tools:targetApi="lollipop" />
 
             </LinearLayout>
-
 
         </FrameLayout>
 

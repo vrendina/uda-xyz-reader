@@ -9,15 +9,17 @@
     tools:context="io.levelsoftware.xyzreader.ui.ArticleListActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/abl_list_header"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/ctbl_list_header"
             android:layout_width="match_parent"
+            android:transitionName="@string/transition_key_collapsing_toolbar"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:titleEnabled="false"
-            app:contentScrim="@android:color/transparent"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <ImageView
@@ -31,8 +33,10 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/tb_list_header"
+                android:transitionName="@string/transition_key_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                tools:targetApi="lollipop" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -52,8 +56,8 @@
             android:scrollbars="none"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:paddingLeft="@dimen/list_side_margin"
-            android:paddingRight="@dimen/list_side_margin"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             tools:listitem="@layout/list_item_article"
             app:layoutManager="android.support.v7.widget.GridLayoutManager"
             app:spanCount="@integer/list_grid_span_count"/>

@@ -10,6 +10,12 @@
 
     <objectAnimator
         android:duration="@android:integer/config_shortAnimTime"
+        android:propertyName="alpha"
+        android:valueTo="0"
+        android:valueType="floatType"/>
+
+    <objectAnimator
+        android:duration="@android:integer/config_shortAnimTime"
         android:propertyName="translationZ"
         android:valueTo="0"
         android:valueType="floatType"/>

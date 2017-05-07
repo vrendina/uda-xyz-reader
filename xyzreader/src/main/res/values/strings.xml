@@ -12,6 +12,12 @@
     <string name="intent_palette_key" translatable="false">palette</string>
     <string name="broadcast_article_service" translatable="false">io.levelsoftware.xyzreader.ARTICLE_SERVICE</string>
 
+    <string name="transition_key_title" translatable="false">title</string>
+    <string name="transition_key_author" translatable="false">author</string>
+    <string name="transition_key_image" translatable="false">image</string>
+    <string name="transition_key_toolbar" translatable="false">toolbar</string>
+    <string name="transition_key_collapsing_toolbar" translatable="false">toolbarCollapsing</string>
+
     <string name="error_unknown">Unknown Error</string>
     <string name="error_no_network">No Connection</string>
     <string name="error_network_issue">Network Problem</string>

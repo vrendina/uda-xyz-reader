@@ -1,5 +1,7 @@
 package io.levelsoftware.xyzreader.ui;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,10 +13,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +31,7 @@ import butterknife.ButterKnife;
 import io.levelsoftware.xyzreader.R;
 import io.levelsoftware.xyzreader.data.Article;
 import io.levelsoftware.xyzreader.data.ArticleDateUtil;
+import timber.log.Timber;
 
 public class ArticleDetailActivity extends AppCompatActivity {
 
@@ -70,6 +77,79 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     .load(article.photoUrl())
                     .into(headerImageView);
         }
+
+        // Hack to keep the navigation bar from flashing
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            postponeEnterTransition();
+
+            final View decor = getWindow().getDecorView();
+            decor.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    decor.getViewTreeObserver().removeOnPreDrawListener(this);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        startPostponedEnterTransition();
+                    }
+                    return true;
+                }
+            });
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+
+            final Transition enterTransition = getWindow().getEnterTransition();
+
+            enterTransition.addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+                    Timber.d("Enter started...");
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    Timber.d("Enter finished...");
+
+                    AnimatorSet liftAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(getBaseContext(), R.animator.lift_on_touch);
+
+                        liftAnimator.setTarget(fab);
+                        liftAnimator.start();
+
+
+
+                    enterTransition.removeListener(this);
+
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+
+                }
+            });
+
+//            Transition enterTransition = new Slide(Gravity.BOTTOM);
+//
+//            enterTransition.addTarget(fab);
+//
+//            getWindow().setSharedElementEnterTransition(enterTransition);
+        }
+
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+//            Transition fade = new Fade();
+//            fade.setDuration(2000);
+//            getWindow().setEnterTransition(fade);
+//        }
+
+
     }
 
     @Override
@@ -78,6 +158,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_detail, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -91,6 +173,9 @@ public class ArticleDetailActivity extends AppCompatActivity {
                 Snackbar.make(coordinatorLayout, R.string.action_added_favorite, Snackbar.LENGTH_SHORT).show();
                 break;
 
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -105,6 +190,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.setStatusBarColor(palette.colorStatusBar());
+            window.setNavigationBarColor(palette.colorStatusBar());
         }
 
         toolbarLayout.setContentScrimColor(palette.colorToolBar());
