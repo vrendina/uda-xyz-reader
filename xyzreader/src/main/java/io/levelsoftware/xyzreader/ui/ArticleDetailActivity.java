@@ -1,16 +1,16 @@
 package io.levelsoftware.xyzreader.ui;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,9 +58,12 @@ public class ArticleDetailActivity extends AppCompatActivity {
         setupColors();
 
         setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         }
 
         Article article = getIntent().getParcelableExtra(getString(R.string.intent_article_key));
@@ -78,78 +80,53 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     .into(headerImageView);
         }
 
-        // Hack to keep the navigation bar from flashing
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
-            postponeEnterTransition();
-
-            final View decor = getWindow().getDecorView();
-            decor.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    decor.getViewTreeObserver().removeOnPreDrawListener(this);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        startPostponedEnterTransition();
-                    }
-                    return true;
-                }
-            });
-        }
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
-
-            final Transition enterTransition = getWindow().getEnterTransition();
-
-            enterTransition.addListener(new Transition.TransitionListener() {
-                @Override
-                public void onTransitionStart(Transition transition) {
-                    Timber.d("Enter started...");
-                }
-
-                @Override
-                public void onTransitionEnd(Transition transition) {
-                    Timber.d("Enter finished...");
-
-                    AnimatorSet liftAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(getBaseContext(), R.animator.lift_on_touch);
-
-                        liftAnimator.setTarget(fab);
-                        liftAnimator.start();
-
-
-
-                    enterTransition.removeListener(this);
-
-                }
-
-                @Override
-                public void onTransitionCancel(Transition transition) {
-
-                }
-
-                @Override
-                public void onTransitionPause(Transition transition) {
-
-                }
-
-                @Override
-                public void onTransitionResume(Transition transition) {
-
-                }
-            });
-
-//            Transition enterTransition = new Slide(Gravity.BOTTOM);
-//
-//            enterTransition.addTarget(fab);
-//
-//            getWindow().setSharedElementEnterTransition(enterTransition);
+            setupTransitions();
         }
 
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
-//            Transition fade = new Fade();
-//            fade.setDuration(2000);
-//            getWindow().setEnterTransition(fade);
-//        }
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setupTransitions() {
 
+        // Hack for preventing flashing
+        postponeEnterTransition();
+        final View decor = getWindow().getDecorView();
+        decor.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                decor.getViewTreeObserver().removeOnPreDrawListener(this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    startPostponedEnterTransition();
+                }
+                return true;
+            }
+        });
+
+        final Transition enterTransition = getWindow().getEnterTransition();
+
+        enterTransition.addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {}
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                Timber.d("Enter finished...");
+
+                toolbar.animate().setDuration(100).alpha(1).start();
+
+                if(!fab.isShown()) {
+                    fab.show();
+                }
+
+                enterTransition.removeListener(this);
+            }
+
+            @Override public void onTransitionCancel(Transition transition) {}
+            @Override public void onTransitionPause(Transition transition) {}
+            @Override public void onTransitionResume(Transition transition) {}
+        });
     }
 
     @Override
@@ -160,6 +137,14 @@ public class ArticleDetailActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        // Trying to reverse the shared element transition if things have moved around doesn't look good.
+        // supportFinishAfterTransition();
+        finish();
+
+        //super.onBackPressed();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -174,7 +159,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                 break;
 
             case android.R.id.home:
-                supportFinishAfterTransition();
+                onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);

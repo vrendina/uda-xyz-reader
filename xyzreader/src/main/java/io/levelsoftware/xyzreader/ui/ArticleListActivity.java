@@ -100,47 +100,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.primaryDark));
         }
-
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
-//            Transition fade = new Fade();
-//            fade.setDuration(2000);
-//            getWindow().setExitTransition(fade);
-//        }
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
-
-//            final Transition exitTransition = getWindow().getExitTransition();
-//
-//            exitTransition.addListener(new Transition.TransitionListener() {
-//                @Override
-//                public void onTransitionStart(Transition transition) {
-//                    Timber.d("Started exit transition");
-//                }
-//
-//                @Override
-//                public void onTransitionEnd(Transition transition) {
-//
-//                }
-//
-//                @Override
-//                public void onTransitionCancel(Transition transition) {
-//
-//                }
-//
-//                @Override
-//                public void onTransitionPause(Transition transition) {
-//
-//                }
-//
-//                @Override
-//                public void onTransitionResume(Transition transition) {
-//
-//                }
-//            });
-
-        }
-
-
     }
 
     @Override
@@ -215,6 +174,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void clickListItem(Article article, ArticleColorPalette palette, List<Pair<View, String>> sharedElements) {
 
+
         final Intent intent = new Intent(this, ArticleDetailActivity.class);
 
         intent.putExtra(getString(R.string.intent_article_key), article);
@@ -232,37 +192,12 @@ public class ArticleListActivity extends AppCompatActivity implements
                 sharedElements.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
             }
 
-            sharedElements.add(Pair.create((View) toolbar, getString(R.string.transition_key_toolbar)));
-//            sharedElements.add(Pair.create((View) collapsingToolbarLayout, getString(R.string.transition_key_toolbar)));
-
             @SuppressWarnings("unchecked")
             final Bundle options = ActivityOptions.makeSceneTransitionAnimation(this,
                     sharedElements.toArray(new Pair[sharedElements.size()])).toBundle();
 
-
+            appBarLayout.setExpanded(false, true);
             startActivity(intent, options);
-
-//            toolbar.animate().alpha(0).setListener(new Animator.AnimatorListener() {
-//                @Override
-//                public void onAnimationStart(Animator animation) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animator animation) {
-//                    startActivity(intent, options);
-//                }
-//
-//                @Override
-//                public void onAnimationCancel(Animator animation) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(Animator animation) {
-//
-//                }
-//            }).start();
 
         } else {
             startActivity(intent);

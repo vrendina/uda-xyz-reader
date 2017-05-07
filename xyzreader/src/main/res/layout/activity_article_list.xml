@@ -16,7 +16,6 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/ctbl_list_header"
             android:layout_width="match_parent"
-            android:transitionName="@string/transition_key_collapsing_toolbar"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:titleEnabled="false"
