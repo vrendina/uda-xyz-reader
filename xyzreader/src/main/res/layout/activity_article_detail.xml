@@ -23,9 +23,10 @@
             app:titleEnabled="false"
             app:contentScrim="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
+                android:id="@+id/iv_detail_header"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
@@ -49,7 +50,7 @@
                 android:layout_marginLeft="@dimen/card_side_margin"
                 android:layout_marginEnd="@dimen/card_side_margin"
                 android:layout_marginRight="@dimen/card_side_margin"
-                android:paddingBottom="@dimen/detail_content_overlay">
+                android:layout_marginBottom="154dp">
 
                 <TextView
                     android:id="@+id/tv_detail_title"
@@ -113,9 +114,10 @@
                     tools:text="Jun 6th, 2016" />
 
                 <TextView
+                    android:id="@+id/tv_body_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/large_text" />
+                    tools:text="Some long story goes here..."/>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>

@@ -7,4 +7,8 @@
     <color name="light">#FFFFFF</color>
     <color name="lightGray">#EEEEEE</color>
     <color name="dark">#757575</color>
+
+    <color name="detail_default_fab">#757575</color>
+    <color name="detail_default_toolbar">#EEEEEE</color>
+    <color name="detail_default_statusbar">#757575</color>
 </resources>

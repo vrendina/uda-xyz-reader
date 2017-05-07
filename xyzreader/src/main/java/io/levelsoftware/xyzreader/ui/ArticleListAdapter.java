@@ -3,10 +3,13 @@ package io.levelsoftware.xyzreader.ui;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.support.v4.util.LongSparseArray;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,23 +21,20 @@ import com.google.common.collect.ImmutableList;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.levelsoftware.xyzreader.R;
 import io.levelsoftware.xyzreader.data.Article;
 import io.levelsoftware.xyzreader.data.ArticleContract;
+import io.levelsoftware.xyzreader.data.ArticleDateUtil;
 import timber.log.Timber;
 
 public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.ArticleCardViewHolder> {
 
     private OnClickListener listener;
     private Cursor cursor;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss", Locale.US);
+
+    public LongSparseArray<ArticleColorPalette> paletteCache = new LongSparseArray<>();
 
     public ArticleListAdapter(OnClickListener listener) {
         this.listener = listener;
@@ -70,19 +70,39 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
         holder.setArticle(article);
 
-        Picasso.with(holder.articleImageView.getContext())
-                .load(article.photoUrl())
-                .into(holder.articleImageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
+        // If we don't have a palette cached for this image then we need to generate one
+        if(paletteCache.get(article.serverId()) == null) {
+            Timber.d("Palette for " + article.serverId() + " was not cached for image, generating new palette.");
 
-                    }
+            final long key = article.serverId();
+            final ImageView imageView = holder.articleImageView;
 
-                    @Override
-                    public void onError() {
+            Picasso.with(imageView.getContext())
+                    .load(article.photoUrl())
+                    .resize(328, 192)
+                    .centerCrop()
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                            Palette palette = Palette.from(bitmap).generate();
+                            paletteCache.put(key, ArticleColorPalette.create(imageView.getContext(), palette));
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onError() {
+                        }
+                    });
+        } else {
+            Timber.d("Palette for " + article.serverId() + " was cached, not creating.");
+
+            Picasso.with(holder.articleImageView.getContext())
+                    .load(article.photoUrl())
+                    .resize(328, 192)
+                    .centerCrop()
+                    .into(holder.articleImageView);
+        }
+
 
     }
 
@@ -125,20 +145,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
             titleTextView.setText(article.title());
             authorTextView.setText(article.author());
-
-            String dateString = "";
-            try {
-                Date date = dateFormat.parse(article.publishedDate());
-
-                dateString = DateUtils.getRelativeTimeSpanString(
-                        date.getTime(),
-                        System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                        DateUtils.FORMAT_ABBREV_ALL).toString();
-            } catch (ParseException e) {
-                Timber.e("Could not parse date information.");
-            }
-
-            dateTextView.setText(dateString);
+            dateTextView.setText(ArticleDateUtil.formatArticleDate(article.publishedDate()));
         }
 
         @Override
@@ -154,7 +161,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
                         liftAnimator.start();
                     }
 
-                    listener.clickListItem(article);
+                    listener.clickListItem(article, paletteCache.get(article.serverId()));
                 break;
 
                 case R.id.iv_list_add_bookmark:
@@ -173,7 +180,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     }
 
     public interface OnClickListener {
-        void clickListItem(Article article);
+        void clickListItem(Article article, ArticleColorPalette palette);
         void clickBookmark(Article article);
         void clickFavorite(Article article);
         void clickShare(Article article);

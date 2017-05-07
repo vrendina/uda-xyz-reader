@@ -121,8 +121,12 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void clickListItem(Article article) {
+    public void clickListItem(Article article, ArticleColorPalette palette) {
         Intent intent = new Intent(this, ArticleDetailActivity.class);
+
+        intent.putExtra(getString(R.string.intent_article_key), article);
+        intent.putExtra(getString(R.string.intent_palette_key), palette);
+
         startActivity(intent);
     }
 

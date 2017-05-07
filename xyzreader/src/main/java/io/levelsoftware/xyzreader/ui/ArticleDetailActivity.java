@@ -1,6 +1,6 @@
 package io.levelsoftware.xyzreader.ui;
 
-import android.graphics.Color;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -15,11 +15,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.levelsoftware.xyzreader.R;
+import io.levelsoftware.xyzreader.data.Article;
+import io.levelsoftware.xyzreader.data.ArticleDateUtil;
 
 public class ArticleDetailActivity extends AppCompatActivity {
 
@@ -27,12 +32,14 @@ public class ArticleDetailActivity extends AppCompatActivity {
     @BindView(R.id.abl_detail_header) AppBarLayout appBarLayout;
     @BindView(R.id.ctbl_detail_header) CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.tb_detail_header) Toolbar toolbar;
+    @BindView(R.id.iv_detail_header) ImageView headerImageView;
     @BindView(R.id.nsv_detail_text_container) NestedScrollView scrollView;
     @BindView(R.id.fab_detail_share) FloatingActionButton fab;
 
     @BindView(R.id.tv_detail_title) TextView titleTextView;
     @BindView(R.id.tv_detail_author) TextView authorTextView;
     @BindView(R.id.tv_detail_date) TextView dateTextView;
+    @BindView(R.id.tv_body_content) TextView bodyTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,20 @@ public class ArticleDetailActivity extends AppCompatActivity {
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        Article article = getIntent().getParcelableExtra(getString(R.string.intent_article_key));
+        if(article != null) {
+            titleTextView.setText(article.title());
+            authorTextView.setText(article.author());
+            dateTextView.setText(ArticleDateUtil.formatArticleDate(article.publishedDate()));
+
+            // The body text causes the transition to be really slow if it is added in first
+            //bodyTextView.setText(article.body());
+
+            Picasso.with(this)
+                    .load(article.photoUrl())
+                    .into(headerImageView);
         }
     }
 
@@ -75,11 +96,19 @@ public class ArticleDetailActivity extends AppCompatActivity {
     }
 
     private void setupColors() {
+
+        ArticleColorPalette palette = getIntent().getParcelableExtra(getString(R.string.intent_palette_key));
+        if(palette == null) {
+            palette = ArticleColorPalette.create(this, null);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
-            window.setStatusBarColor(Color.BLUE);
+            window.setStatusBarColor(palette.colorStatusBar());
         }
-        toolbarLayout.setContentScrimColor(Color.YELLOW);
+
+        toolbarLayout.setContentScrimColor(palette.colorToolBar());
+        fab.setBackgroundTintList(ColorStateList.valueOf(palette.colorHighlight()));
     }
 
     private void setupScrollView() {
