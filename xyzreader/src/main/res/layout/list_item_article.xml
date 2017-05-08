@@ -47,14 +47,10 @@
                 <TextView
                     android:id="@+id/tv_list_title"
                     android:transitionName="@string/transition_key_title"
-                    android:textColor="#CCFFFFFF"
-                    android:textSize="30sp"
+                    style="@style/XyzTheme.TitleText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:text="Japanese Fairy Tales"
-                    android:maxLines="2"
-                    android:paddingTop="32dp"
-                    android:ellipsize="end"
                     tools:targetApi="lollipop" />
 
                 <TextView
@@ -62,10 +58,8 @@
                     android:transitionName="@string/transition_key_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#AAFFFFFF"
+                    style="@style/XyzTheme.AuthorText"
                     tools:text="Yei Theodora Ozaki"
-                    android:maxLines="1"
-                    android:ellipsize="end"
                     tools:targetApi="lollipop" />
 
             </LinearLayout>
@@ -85,13 +79,11 @@
             android:clipChildren="true">
 
             <TextView
-                style="@style/Base.TextAppearance.AppCompat.Caption"
                 android:id="@+id/tv_list_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                style="@style/XyzTheme.DateText"
                 tools:text="Jun 6th, 2016"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:layout_weight="1"/>
 
             <ImageView

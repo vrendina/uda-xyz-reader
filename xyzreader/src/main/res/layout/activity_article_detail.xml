@@ -25,8 +25,7 @@
             app:titleEnabled="false"
             app:contentScrim="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|enterAlways">
 
             <ImageView
                 android:id="@+id/iv_detail_header"
@@ -53,14 +52,10 @@
                 <TextView
                     android:id="@+id/tv_detail_title"
                     android:transitionName="@string/transition_key_title"
-                    android:textSize="30sp"
-                    android:textColor="#CCFFFFFF"
+                    style="@style/XyzTheme.TitleText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:text="Japanese Fairy Tales"
-                    android:paddingTop="32dp"
-                    android:maxLines="2"
-                    android:ellipsize="end"
                     tools:targetApi="lollipop" />
 
                 <TextView
@@ -68,10 +63,8 @@
                     android:transitionName="@string/transition_key_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#AAFFFFFF"
+                    style="@style/XyzTheme.AuthorText"
                     tools:text="Yei Theodora Ozaki"
-                    android:maxLines="1"
-                    android:ellipsize="end"
                     tools:targetApi="lollipop" />
 
             </LinearLayout>
@@ -82,7 +75,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                android:alpha="0"
                 app:popupTheme="@style/XyzTheme.PopupOverlay"
                 tools:targetApi="lollipop" />
 
@@ -90,46 +82,26 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nsv_detail_text_container"
+    <!--<android.support.v4.widget.NestedScrollView-->
+        <!--android:id="@+id/nsv_detail_text_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+        <!--tools:context="io.levelsoftware.xyzreader.ui.ArticleDetailActivity"-->
+        <!--tools:showIn="@layout/activity_article_detail">-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_article_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="16dp"
+        android:scrollbars="none"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="io.levelsoftware.xyzreader.ui.ArticleDetailActivity"
-        tools:showIn="@layout/activity_article_detail">
+        tools:listitem="@layout/list_item_body"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
-        <!--<android.support.v7.widget.CardView-->
-            <!--android:id="@+id/cv_detail_text_container"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="@dimen/card_side_margin"-->
-            <!--app:cardBackgroundColor="@android:color/white"-->
-            <!--app:cardElevation="4dp"-->
-            <!--app:contentPaddingBottom="8dp">-->
-
-            <LinearLayout
-                android:transitionName="test"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/detail_text_side_margin"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_detail_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Jun 6th, 2016" />
-
-                <TextView
-                    android:id="@+id/tv_body_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Some long story goes here..."/>
-            </LinearLayout>
-
-        <!--</android.support.v7.widget.CardView>-->
-
-    </android.support.v4.widget.NestedScrollView>
+    <!--</android.support.v4.widget.NestedScrollView>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_detail_share"
@@ -138,7 +110,7 @@
         android:layout_margin="32dp"
         android:layout_gravity="end|bottom"
         android:clickable="true"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:srcCompat="@drawable/ic_share_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
