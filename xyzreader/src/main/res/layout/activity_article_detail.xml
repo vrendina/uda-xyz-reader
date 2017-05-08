@@ -13,7 +13,6 @@
         android:id="@+id/abl_detail_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/detail_app_bar_height"
-        android:background="@android:color/transparent"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -88,7 +87,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                android:background="@drawable/scrim_top"
                 app:popupTheme="@style/XyzTheme.PopupOverlay"
                 tools:targetApi="lollipop" />
 

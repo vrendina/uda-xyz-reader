@@ -75,8 +75,29 @@ public class ArticleDetailActivity extends AppCompatActivity
         setupActionBar();
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            hideViews();
             setupTransitions();
         }
+
+        if(savedInstanceState != null) {
+            showViews();
+        }
+    }
+
+    private void hideViews() {
+        // Hide elements so they can be animated in appropriately
+        toolbar.setAlpha(0);
+        recyclerView.setAlpha(0);
+        bottomScrimImageView.setImageAlpha(0);
+        fab.setVisibility(View.INVISIBLE);
+    }
+
+    private void showViews() {
+        // Hide elements so they can be animated in appropriately
+        toolbar.setAlpha(1);
+        recyclerView.setAlpha(1);
+        bottomScrimImageView.setImageAlpha(255);
+        fab.setVisibility(View.VISIBLE);
     }
 
     private void setupData() {
@@ -146,12 +167,6 @@ public class ArticleDetailActivity extends AppCompatActivity
             }
 
             @Override public void onTransitionStart(Transition transition) {
-                // Hide elements so they can be animated in appropriately
-                toolbar.setAlpha(0);
-                recyclerView.setAlpha(0);
-                bottomScrimImageView.setImageAlpha(0);
-                fab.setVisibility(View.INVISIBLE);
-
                 float startY = recyclerView.getY();
                 recyclerView.setY(startY + recyclerView.getHeight());
 
