@@ -1,6 +1,7 @@
 package io.levelsoftware.xyzreader.ui;
 
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -9,9 +10,12 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.view.Menu;
@@ -20,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,23 +34,29 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.levelsoftware.xyzreader.R;
 import io.levelsoftware.xyzreader.data.Article;
+import io.levelsoftware.xyzreader.data.ArticleContract;
 import io.levelsoftware.xyzreader.data.ArticleDateUtil;
 import timber.log.Timber;
 
-public class ArticleDetailActivity extends AppCompatActivity {
+public class ArticleDetailActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(R.id.cl_detail) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.abl_detail_header) AppBarLayout appBarLayout;
     @BindView(R.id.ctbl_detail_header) CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.tb_detail_header) Toolbar toolbar;
     @BindView(R.id.iv_detail_header) ImageView headerImageView;
-    @BindView(R.id.nsv_detail_text_container) NestedScrollView scrollView;
     @BindView(R.id.fab_detail_share) FloatingActionButton fab;
 
     @BindView(R.id.tv_detail_title) TextView titleTextView;
     @BindView(R.id.tv_detail_author) TextView authorTextView;
-    @BindView(R.id.tv_detail_date) TextView dateTextView;
-    @BindView(R.id.tv_body_content) TextView bodyTextView;
+
+    @BindView(R.id.rv_article_body) RecyclerView recyclerView;
+
+    public static final int ARTICLE_DETAIL_LOADER = 1;
+
+    private ArticleBodyAdapter adapter;
+    private Article article;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,35 +67,44 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
         setupScrollView();
         setupColors();
+        setupActionBar();
 
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-        }
+        adapter = new ArticleBodyAdapter();
+        recyclerView.setAdapter(adapter);
 
         Article article = getIntent().getParcelableExtra(getString(R.string.intent_article_key));
         if(article != null) {
+            this.article = article;
+            // The body text causes the transition to be really slow if it is added in first so
+            // we will load it with a cursor loader then fade it in when we have it
+            getSupportLoaderManager().initLoader(ARTICLE_DETAIL_LOADER, null, this);
+
             titleTextView.setText(article.title());
             authorTextView.setText(article.author());
-            dateTextView.setText(ArticleDateUtil.formatArticleDate(article.publishedDate()));
 
-            // The body text causes the transition to be really slow if it is added in first
-            //bodyTextView.setText(article.body());
+            String dateString = getString(R.string.published_date,
+                    ArticleDateUtil.formatArticleDate(article.publishedDate()));
+
+            adapter.setHeader(dateString);
 
             Picasso.with(this)
                     .load(article.photoUrl())
                     .into(headerImageView);
         }
 
-
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
             setupTransitions();
         }
+    }
 
+    private void setupActionBar() {
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -108,21 +128,33 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
         enterTransition.addListener(new Transition.TransitionListener() {
             @Override
-            public void onTransitionStart(Transition transition) {}
-
-            @Override
             public void onTransitionEnd(Transition transition) {
-                Timber.d("Enter finished...");
+                Timber.d("Enter transition complete, animating other views...");
 
-                toolbar.animate().setDuration(100).alpha(1).start();
-
+                toolbar.animate().setDuration(50).alpha(1).start();
                 if(!fab.isShown()) {
                     fab.show();
                 }
-
                 enterTransition.removeListener(this);
             }
 
+            @Override public void onTransitionStart(Transition transition) {
+
+                // Hide elements so they can be animated in appropriately
+                toolbar.setAlpha(0);
+                recyclerView.setAlpha(0);
+                fab.setVisibility(View.INVISIBLE);
+
+                float startY = recyclerView.getY();
+                recyclerView.setY(startY + recyclerView.getHeight());
+
+                recyclerView.animate().setDuration(300).y(startY)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .start();
+
+                recyclerView.animate().setDuration(300).alpha(1).start();
+
+            }
             @Override public void onTransitionCancel(Transition transition) {}
             @Override public void onTransitionPause(Transition transition) {}
             @Override public void onTransitionResume(Transition transition) {}
@@ -183,10 +215,9 @@ public class ArticleDetailActivity extends AppCompatActivity {
     }
 
     private void setupScrollView() {
-        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                int dy = scrollY - oldScrollY;
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if(dy > 0) {
                     if(fab.isShown()) {
                         fab.hide();
@@ -197,7 +228,48 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         fab.show();
                     }
                 }
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {ArticleContract.Article.COLUMN_BODY};
+        String selection = ArticleContract.Article.COLUMN_SERVER_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(article.serverId())};
+
+        return new CursorLoader(this,
+                ArticleContract.Article.CONTENT_URI,
+                projection,
+                selection, selectionArgs,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data != null) {
+            data.moveToFirst();
+            String bodyText = data.getString(0);
+
+            Timber.d("Initial string length--- " + bodyText.length());
+            /*
+             * Adding the text data to a single TextView is not very fast so it is more efficient
+             * to break it down into logical sections and place each of those sections into a
+             * RecyclerView cell. Any time a double line break is encountered in the text it will
+             * be split into a new cell.
+             */
+            String[] content = bodyText.split("\\r\\n\\r\\n");
+
+            Timber.d("Split into cells: " + content.length);
+
+            adapter.setData(content);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }

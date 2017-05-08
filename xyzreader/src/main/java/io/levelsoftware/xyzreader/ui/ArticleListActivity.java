@@ -111,19 +111,11 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
         String[] projection = {ArticleContract.Article.COLUMN_SERVER_ID,
                 ArticleContract.Article.COLUMN_AUTHOR,
                 ArticleContract.Article.COLUMN_TITLE,
                 ArticleContract.Article.COLUMN_PUBLISHED_DATE,
                 ArticleContract.Article.COLUMN_PHOTO_URL};
-
-//        int serverIdIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_SERVER_ID);
-//        int authorIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_AUTHOR);
-//        int titleIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_TITLE);
-//        int dateIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_PUBLISHED_DATE);
-//        int photoIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_PHOTO_URL);
-
 
         return new CursorLoader(this,
                 ArticleContract.Article.CONTENT_URI,
