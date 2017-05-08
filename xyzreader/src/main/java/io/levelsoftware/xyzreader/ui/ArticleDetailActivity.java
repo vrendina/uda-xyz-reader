@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -254,37 +253,9 @@ public class ArticleDetailActivity extends AppCompatActivity
         });
 
 
-        // Need to remove the scrims when the toolbar collapses to a solid color, they don't get faded out with the text
+        // Set trigger height for toolbar
         final int triggerHeight = (int) (2.5 * ViewCompat.getMinimumHeight(toolbarLayout));
         toolbarLayout.setScrimVisibleHeightTrigger(triggerHeight);
-
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if(toolbarLayout.getHeight() + verticalOffset < triggerHeight) {
-
-                    if(bottomScrimImageView.getImageAlpha() == 255) {
-                        ObjectAnimator.ofInt(bottomScrimImageView, "imageAlpha", 0)
-                                .setDuration(300).start();
-
-                        Drawable backgroundScrim = toolbar.getBackground();
-                        ObjectAnimator.ofInt(backgroundScrim, "alpha", 0)
-                                .setDuration(300).start();
-                    }
-
-                } else {
-
-                    if(bottomScrimImageView.getImageAlpha() == 0) {
-                        ObjectAnimator.ofInt(bottomScrimImageView, "imageAlpha", 255)
-                                .setDuration(300).start();
-
-                        Drawable backgroundScrim = toolbar.getBackground();
-                        ObjectAnimator.ofInt(backgroundScrim, "alpha", 255)
-                                .setDuration(300).start();
-                    }
-                }
-            }
-        });
     }
 
 

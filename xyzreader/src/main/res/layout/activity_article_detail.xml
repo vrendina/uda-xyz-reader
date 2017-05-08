@@ -23,7 +23,7 @@
             android:fitsSystemWindows="true"
             app:titleEnabled="false"
             app:contentScrim="?attr/colorPrimary"
-            app:scrimAnimationDuration="300"
+            app:scrimAnimationDuration="600"
             android:minHeight="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed|enterAlways">
 

@@ -188,8 +188,8 @@ public class ArticleListActivity extends AppCompatActivity implements
             final Bundle options = ActivityOptions.makeSceneTransitionAnimation(this,
                     sharedElements.toArray(new Pair[sharedElements.size()])).toBundle();
 
-            appBarLayout.setExpanded(false, true);
             startActivity(intent, options);
+            appBarLayout.setExpanded(false, true);
 
         } else {
             startActivity(intent);
