@@ -11,4 +11,7 @@
     <color name="detail_default_fab">#757575</color>
     <color name="detail_default_toolbar">#EEEEEE</color>
     <color name="detail_default_statusbar">#757575</color>
+
+    <color name="title_font">#CCFFFFFF</color>
+    <color name="author_font">#AAFFFFFF</color>
 </resources>
