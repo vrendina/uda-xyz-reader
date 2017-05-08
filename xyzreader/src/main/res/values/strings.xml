@@ -4,6 +4,7 @@
     <string name="add_bookmark">Add Bookmark</string>
     <string name="add_favorite">Add Favorite</string>
     <string name="share">Share</string>
+    <string name="published_date">Published %1$s</string>
 
     <string name="description_article_image">Article Image</string>
 
