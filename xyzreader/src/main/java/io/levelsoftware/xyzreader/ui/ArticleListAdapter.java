@@ -70,7 +70,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
                 .author(cursor.getString(authorIndex))
                 .title(cursor.getString(titleIndex))
                 .publishedDate(cursor.getString(dateIndex))
-                .body("")
                 .photoUrl(cursor.getString(photoIndex))
                 .build();
 
