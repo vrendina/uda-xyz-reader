@@ -1,7 +1,10 @@
 package io.levelsoftware.xyzreader.ui;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -13,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +50,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     @BindView(R.id.ctbl_detail_header) CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.tb_detail_header) Toolbar toolbar;
     @BindView(R.id.iv_detail_header) ImageView headerImageView;
+    @BindView(R.id.iv_detail_bottom_scrim) ImageView bottomScrimImageView;
     @BindView(R.id.fab_detail_share) FloatingActionButton fab;
 
     @BindView(R.id.tv_detail_title) TextView titleTextView;
@@ -65,10 +70,17 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+        setupData();
         setupScrollView();
         setupColors();
         setupActionBar();
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            setupTransitions();
+        }
+    }
+
+    private void setupData() {
         adapter = new ArticleBodyAdapter();
         recyclerView.setAdapter(adapter);
 
@@ -90,10 +102,6 @@ public class ArticleDetailActivity extends AppCompatActivity
             Picasso.with(this)
                     .load(article.photoUrl())
                     .into(headerImageView);
-        }
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
-            setupTransitions();
         }
     }
 
@@ -131,28 +139,39 @@ public class ArticleDetailActivity extends AppCompatActivity
             public void onTransitionEnd(Transition transition) {
                 Timber.d("Enter transition complete, animating other views...");
 
-                toolbar.animate().setDuration(50).alpha(1).start();
-                if(!fab.isShown()) {
-                    fab.show();
-                }
+                toolbar.animate().setDuration(300).alpha(1).start();
+                ObjectAnimator.ofInt(bottomScrimImageView, "imageAlpha", 255)
+                    .setDuration(300).start();
+
                 enterTransition.removeListener(this);
             }
 
             @Override public void onTransitionStart(Transition transition) {
-
                 // Hide elements so they can be animated in appropriately
                 toolbar.setAlpha(0);
                 recyclerView.setAlpha(0);
+                bottomScrimImageView.setImageAlpha(0);
                 fab.setVisibility(View.INVISIBLE);
 
                 float startY = recyclerView.getY();
                 recyclerView.setY(startY + recyclerView.getHeight());
 
-                recyclerView.animate().setDuration(300).y(startY)
+                recyclerView.animate().setDuration(600).y(startY)
                         .setInterpolator(new AccelerateDecelerateInterpolator())
                         .start();
 
-                recyclerView.animate().setDuration(300).alpha(1).start();
+                recyclerView.animate().setDuration(600).alpha(1).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if(!fab.isShown()) {
+                            fab.show();
+                        }
+                    }
+
+                    @Override public void onAnimationStart(Animator animation) {}
+                    @Override public void onAnimationCancel(Animator animation) {}
+                    @Override public void onAnimationRepeat(Animator animation) {}
+                });
 
             }
             @Override public void onTransitionCancel(Transition transition) {}
@@ -215,6 +234,8 @@ public class ArticleDetailActivity extends AppCompatActivity
     }
 
     private void setupScrollView() {
+
+        // For hiding the fab when the RecyclerView is scrolling down, but showing when we are going up
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -229,6 +250,39 @@ public class ArticleDetailActivity extends AppCompatActivity
                     }
                 }
                 super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
+
+        // Need to remove the scrims when the toolbar collapses to a solid color, they don't get faded out with the text
+        final int triggerHeight = (int) (2.5 * ViewCompat.getMinimumHeight(toolbarLayout));
+        toolbarLayout.setScrimVisibleHeightTrigger(triggerHeight);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if(toolbarLayout.getHeight() + verticalOffset < triggerHeight) {
+
+                    if(bottomScrimImageView.getImageAlpha() == 255) {
+                        ObjectAnimator.ofInt(bottomScrimImageView, "imageAlpha", 0)
+                                .setDuration(300).start();
+
+                        Drawable backgroundScrim = toolbar.getBackground();
+                        ObjectAnimator.ofInt(backgroundScrim, "alpha", 0)
+                                .setDuration(300).start();
+                    }
+
+                } else {
+
+                    if(bottomScrimImageView.getImageAlpha() == 0) {
+                        ObjectAnimator.ofInt(bottomScrimImageView, "imageAlpha", 255)
+                                .setDuration(300).start();
+
+                        Drawable backgroundScrim = toolbar.getBackground();
+                        ObjectAnimator.ofInt(backgroundScrim, "alpha", 255)
+                                .setDuration(300).start();
+                    }
+                }
             }
         });
     }
