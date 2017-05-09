@@ -1,9 +1,13 @@
 <resources>
     <dimen name="detail_app_bar_height">320dp</dimen>
-    <dimen name="detail_content_overlay">128dp</dimen>
-    <dimen name="detail_text_side_margin">16dp</dimen>
 
     <dimen name="card_side_margin">16dp</dimen>
-
     <dimen name="list_side_margin">16dp</dimen>
+
+    <dimen name="detail_text_key_line">16dp</dimen>
+    <dimen name="detail_text_side_padding">@dimen/detail_text_key_line</dimen>
+    <dimen name="detail_text_top_bottom_padding">16dp</dimen>
+    <dimen name="detail_title_text_side_padding">@dimen/detail_text_key_line</dimen>
+
+    <dimen name="detail_fab_layout_margin">16dp</dimen>
 </resources>

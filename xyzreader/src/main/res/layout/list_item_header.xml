@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tv_body_content_block"
-        style="@style/XyzTheme.DateText"
+        style="@style/DateText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Published May 1, 1953"/>

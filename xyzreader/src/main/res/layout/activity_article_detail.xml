@@ -52,17 +52,15 @@
                     android:layout_height="match_parent"
                     android:gravity="bottom"
                     android:orientation="vertical"
-                    android:layout_marginStart="@dimen/card_side_margin"
-                    android:layout_marginLeft="@dimen/card_side_margin"
-                    android:layout_marginEnd="@dimen/card_side_margin"
-                    android:layout_marginRight="@dimen/card_side_margin"
+                    android:paddingLeft="@dimen/detail_title_text_side_padding"
+                    android:paddingRight="@dimen/detail_title_text_side_padding"
                     android:paddingTop="32dp"
                     android:paddingBottom="16dp">
 
                     <TextView
                         android:id="@+id/tv_detail_title"
                         android:transitionName="@string/transition_key_title"
-                        style="@style/XyzTheme.TitleText"
+                        style="@style/TitleText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:text="Japanese Fairy Tales"
@@ -73,7 +71,7 @@
                         android:transitionName="@string/transition_key_author"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/XyzTheme.AuthorText"
+                        style="@style/AuthorText"
                         tools:text="Yei Theodora Ozaki"
                         tools:targetApi="lollipop" />
 
@@ -107,8 +105,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="16dp"
         android:scrollbars="none"
+        android:paddingLeft="@dimen/detail_text_side_padding"
+        android:paddingRight="@dimen/detail_text_side_padding"
+        android:paddingTop="@dimen/detail_text_top_bottom_padding"
+        android:paddingBottom="@dimen/detail_text_top_bottom_padding"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/list_item_body"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
@@ -119,7 +120,7 @@
         android:id="@+id/fab_detail_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="32dp"
+        android:layout_margin="@dimen/detail_fab_layout_margin"
         android:layout_gravity="end|bottom"
         android:clickable="true"
         android:visibility="visible"

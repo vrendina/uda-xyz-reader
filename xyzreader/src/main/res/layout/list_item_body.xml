@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tv_body_content_block"
-        style="@style/XyzTheme.BodyText"
+        style="@style/BodyText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse et accumsan justo, ut dapibus sem. Nullam ut nibh lectus. Nam elementum odio non est mattis dapibus. Suspendisse viverra molestie mi ac hendrerit. Praesent ligula felis, cursus in nulla nec, laoreet vulputate dui. Vestibulum sed lacus nisi. Nam ut lobortis odio. Aliquam congue dignissim libero, ac aliquet diam faucibus vitae. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer convallis arcu quis semper semper. Sed rutrum maximus elit nec congue. Aenean gravida vulputate ultricies. Etiam sit amet risus eleifend, dictum elit ut, mollis turpis. Aliquam erat volutpat. Pellentesque finibus consectetur lectus vitae porta."/>
