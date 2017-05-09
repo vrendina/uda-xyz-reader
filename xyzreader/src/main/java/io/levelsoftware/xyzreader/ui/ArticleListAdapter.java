@@ -134,7 +134,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         @BindView(R.id.tv_list_date) TextView dateTextView;
         @BindView(R.id.iv_list_bottom_scrim) ImageView scrimImageView;
         @BindView(R.id.iv_list_article_image) ImageView articleImageView;
-        @BindView(R.id.iv_list_add_bookmark) ImageView bookmarkImageView;
         @BindView(R.id.iv_list_add_favorite) ImageView favoriteImageView;
         @BindView(R.id.iv_list_share) ImageView shareImageView;
 
@@ -146,7 +145,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
             ButterKnife.bind(this, view);
 
             itemFrameLayout.setOnClickListener(this);
-            bookmarkImageView.setOnClickListener(this);
             favoriteImageView.setOnClickListener(this);
             shareImageView.setOnClickListener(this);
         }
@@ -194,10 +192,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
                     }
                 break;
 
-                case R.id.iv_list_add_bookmark:
-                    listener.clickBookmark(article);
-                break;
-
                 case R.id.iv_list_add_favorite:
                     listener.clickFavorite(article);
                 break;
@@ -211,7 +205,6 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
     public interface OnClickListener {
         void clickListItem(int position, Article article, ArticleColorPalette palette, List<Pair<View, String>> sharedElements);
-        void clickBookmark(Article article);
         void clickFavorite(Article article);
         void clickShare(Article article);
     }
