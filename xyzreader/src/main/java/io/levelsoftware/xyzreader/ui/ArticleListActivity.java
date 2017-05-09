@@ -211,12 +211,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void clickBookmark(Article article) {
-        Timber.d("Clicked bookmark for: " + article.title());
-        showSnackBar(R.string.action_added_bookmark, R.string.action_undo, Snackbar.LENGTH_SHORT);
-    }
-
-    @Override
     public void clickFavorite(Article article) {
         Timber.d("Clicked favorite for: " + article.title());
         showSnackBar(R.string.action_added_favorite, R.string.action_undo, Snackbar.LENGTH_SHORT);
