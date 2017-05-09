@@ -55,8 +55,8 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
         if(position == 0) {
             clean = header;
         } else {
-            String raw = data[position];
-            clean = raw.replaceAll("\\r\\n", " ").replaceAll("  ", " ");
+            String raw = data[position - 1];
+            clean = raw.trim().replaceAll("\\r\\n| +", " ");
         }
 
         holder.bodyContentBlock.setText(clean);
