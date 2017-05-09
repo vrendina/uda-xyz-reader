@@ -2,6 +2,8 @@ package io.levelsoftware.xyzreader.ui;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.os.Build;
@@ -16,6 +18,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -159,9 +161,12 @@ public class ArticleDetailActivity extends AppCompatActivity
             public void onTransitionEnd(Transition transition) {
                 Timber.d("Enter transition complete, animating other views...");
 
-                toolbar.animate().setDuration(300).alpha(1).start();
-                ObjectAnimator.ofInt(bottomScrimImageView, "imageAlpha", 255)
-                    .setDuration(300).start();
+                toolbar.animate().setDuration(600).alpha(1).start();
+
+                ValueAnimator scrimAnimator = ObjectAnimator.ofInt(bottomScrimImageView, "imageAlpha", 255);
+                scrimAnimator.setInterpolator(new FastOutSlowInInterpolator());
+                scrimAnimator.setDuration(2000);
+                scrimAnimator.start();
 
                 enterTransition.removeListener(this);
             }
@@ -170,11 +175,11 @@ public class ArticleDetailActivity extends AppCompatActivity
                 float startY = recyclerView.getY();
                 recyclerView.setY(startY + recyclerView.getHeight());
 
-                recyclerView.animate().setDuration(600).y(startY)
-                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                recyclerView.animate().setDuration(1200).y(startY)
+                        .setInterpolator(new FastOutSlowInInterpolator())
                         .start();
 
-                recyclerView.animate().setDuration(600).alpha(1).setListener(new Animator.AnimatorListener() {
+                recyclerView.animate().setDuration(1200).alpha(1).setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         if(!fab.isShown()) {
@@ -185,7 +190,7 @@ public class ArticleDetailActivity extends AppCompatActivity
                     @Override public void onAnimationStart(Animator animation) {}
                     @Override public void onAnimationCancel(Animator animation) {}
                     @Override public void onAnimationRepeat(Animator animation) {}
-                });
+                }).start();
 
             }
             @Override public void onTransitionCancel(Transition transition) {}
@@ -214,13 +219,16 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-
             case R.id.action_bookmark:
-                Snackbar.make(coordinatorLayout, R.string.action_added_bookmark, Snackbar.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.add_bookmark, Snackbar.LENGTH_SHORT);
+                snackbar.setAction(R.string.action_undo, new View.OnClickListener() {@Override public void onClick(View v) {}});
+                snackbar.show();
                 break;
 
             case R.id.action_favorite:
-                Snackbar.make(coordinatorLayout, R.string.action_added_favorite, Snackbar.LENGTH_SHORT).show();
+                snackbar = Snackbar.make(coordinatorLayout, R.string.add_favorite, Snackbar.LENGTH_SHORT);
+                snackbar.setAction(R.string.action_undo, new View.OnClickListener() {@Override public void onClick(View v) {}});
+                snackbar.show();
                 break;
 
             case android.R.id.home:
@@ -311,5 +319,15 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    public void clickedShare(View view) {
+        String shareString = getString(R.string.share_content, article.title(), article.author());
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareString);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.share)));
     }
 }

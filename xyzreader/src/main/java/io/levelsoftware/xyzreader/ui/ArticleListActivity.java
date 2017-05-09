@@ -59,6 +59,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     private static final int MAX_RETRY_COUNT = 3;
     private int retryCount;
 
+    private int detailPosition = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +109,17 @@ public class ArticleListActivity extends AppCompatActivity implements
         super.onDestroy();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Redraw the item we just came from if returning from the detail page
+        if(detailPosition != -1) {
+            adapter.notifyItemChanged(detailPosition);
+            detailPosition = -1;
+        }
     }
 
     @Override
@@ -164,8 +177,9 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void clickListItem(Article article, ArticleColorPalette palette, List<Pair<View, String>> sharedElements) {
+    public void clickListItem(int position, Article article, ArticleColorPalette palette, List<Pair<View, String>> sharedElements) {
 
+        detailPosition = position;
 
         final Intent intent = new Intent(this, ArticleDetailActivity.class);
 
@@ -211,6 +225,14 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void clickShare(Article article) {
         Timber.d("Clicked share for: " + article.title());
+
+        String shareString = getString(R.string.share_content, article.title(), article.author());
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareString);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.share)));
     }
 
     @Override

@@ -3,7 +3,9 @@
 
     <string name="add_bookmark">Add Bookmark</string>
     <string name="add_favorite">Add Favorite</string>
+
     <string name="share">Share</string>
+    <string name="share_content">Check out this cool article on XYZ Reader: %1$s by %2$s</string>
     <string name="published_date">Published %1$s</string>
 
     <string name="description_article_image">Article Image</string>
