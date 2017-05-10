@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="4dp"
+    android:background="@color/light"
+    android:paddingLeft="@dimen/detail_text_key_line"
+    android:paddingRight="@dimen/detail_text_key_line"
+    android:paddingTop="@dimen/detail_text_key_line"
     android:paddingBottom="4dp">
 
     <TextView

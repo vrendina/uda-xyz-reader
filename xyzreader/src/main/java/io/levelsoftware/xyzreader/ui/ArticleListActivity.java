@@ -203,6 +203,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                     sharedElements.toArray(new Pair[sharedElements.size()])).toBundle();
 
             startActivity(intent, options);
+//            startActivity(intent);
             appBarLayout.setExpanded(false, true);
 
         } else {

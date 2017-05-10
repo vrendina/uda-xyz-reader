@@ -27,7 +27,7 @@
                 android:src="@drawable/logo"
                 android:tint="@color/dark"
                 android:contentDescription="@string/app_name"
-                android:padding="12dp"
+                android:padding="8dp"
                 android:layout_margin="0dp" />
 
             <android.support.v7.widget.Toolbar
@@ -53,10 +53,10 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:scrollbars="none"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
+            android:paddingTop="@dimen/list_item_container_top_bottom_padding"
+            android:paddingBottom="@dimen/list_item_container_top_bottom_padding"
+            android:paddingLeft="@dimen/list_item_container_side_padding"
+            android:paddingRight="@dimen/list_item_container_side_padding"
             tools:listitem="@layout/list_item_article"
             app:layoutManager="android.support.v7.widget.GridLayoutManager"
             app:spanCount="@integer/list_grid_span_count"/>

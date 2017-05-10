@@ -9,6 +9,7 @@
     <style name="XyzTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/lightGray</item>
     </style>
 
     <style name="XyzTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

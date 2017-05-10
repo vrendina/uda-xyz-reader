@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- This is the breakpoint for when devices become "small tablets" -->
     <dimen name="detail_text_key_line">24dp</dimen>
     <dimen name="detail_fab_layout_margin">24dp</dimen>
 </resources>

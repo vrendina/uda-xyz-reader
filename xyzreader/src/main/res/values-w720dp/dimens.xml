@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="detail_text_key_line">24dp</dimen>
+    <dimen name="detail_text_content_max_width">512dp</dimen>
+    <dimen name="detail_header_image_height">405dp</dimen>
+
+    <!-- detail_header_image_height - 28 -->
+    <dimen name="detail_fab_top_margin">377dp</dimen>
+
+    <dimen name="list_grid_image_height">220dp</dimen>
+</resources>

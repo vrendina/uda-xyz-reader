@@ -12,7 +12,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/abl_detail_header"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/detail_app_bar_height"
+        android:layout_height="@dimen/detail_header_image_height"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -34,6 +34,7 @@
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/description_article_image"
                 app:layout_collapseMode="parallax"
+                tools:src="@drawable/sample"
                 tools:targetApi="lollipop" />
 
             <FrameLayout
@@ -92,29 +93,15 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <!--<android.support.v4.widget.NestedScrollView-->
-        <!--android:id="@+id/nsv_detail_text_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-        <!--tools:context="io.levelsoftware.xyzreader.ui.ArticleDetailActivity"-->
-        <!--tools:showIn="@layout/activity_article_detail">-->
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_article_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:scrollbars="none"
-        android:paddingLeft="@dimen/detail_text_side_padding"
-        android:paddingRight="@dimen/detail_text_side_padding"
-        android:paddingTop="@dimen/detail_text_top_bottom_padding"
-        android:paddingBottom="@dimen/detail_text_top_bottom_padding"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/list_item_body"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
-
-    <!--</android.support.v4.widget.NestedScrollView>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_detail_share"
@@ -122,6 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/detail_fab_layout_margin"
         android:layout_gravity="end|bottom"
+        app:fabSize="auto"
         android:clickable="true"
         android:visibility="visible"
         android:onClick="clickedShare"
