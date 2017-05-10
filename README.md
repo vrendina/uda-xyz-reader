@@ -8,7 +8,7 @@ The purpose of this project is to style an existing application according to the
 
 ![GridPhone](screenshots/n5_list_port.png?raw=true) ![DetailPhone](screenshots/n5_detail_port.png?raw=true)
 
-![GridTablet](screenshots/n9_list_port.png?raw=true) ![DetailTablet](screenshots/n9_detail_port.png?raw=true)
+![GridTablet](screenshots/n9_grid_port.png?raw=true) ![DetailTablet](screenshots/n9_detail_port.png?raw=true)
 
 ### Development Tasks
 
