@@ -13,7 +13,9 @@
         android:id="@+id/abl_detail_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/detail_header_image_height"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:elevation="4dp"
+        tools:targetApi="lollipop">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/ctbl_detail_header"
@@ -113,6 +115,8 @@
         android:clickable="true"
         android:visibility="visible"
         android:onClick="clickedShare"
-        app:srcCompat="@drawable/ic_share_white_24dp" />
+        app:srcCompat="@drawable/ic_share_white_24dp"
+        android:elevation="6dp"
+        tools:targetApi="lollipop" />
 
 </android.support.design.widget.CoordinatorLayout>

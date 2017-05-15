@@ -11,7 +11,9 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/abl_list_header"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+        tools:targetApi="lollipop">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/ctbl_list_header"
