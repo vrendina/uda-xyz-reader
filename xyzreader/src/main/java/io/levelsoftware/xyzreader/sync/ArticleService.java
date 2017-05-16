@@ -31,7 +31,9 @@ import timber.log.Timber;
 
 public class ArticleService extends IntentService {
 
-    public static final String CONTENT_URL = "https://go.udacity.com/xyz-reader-json";
+//    public static final String CONTENT_URL = "https://go.udacity.com/xyz-reader-json";
+    public static final String CONTENT_URL = "https://raw.githubusercontent.com/TNTest/xyzreader/master/data.json";
+
     //public static final int MINIMUM_UPDATE_INTERVAL = 1000 * 60 * 10; // 10 minutes
     public static final int MINIMUM_UPDATE_INTERVAL = 1000 * 5; // 5 seconds
 
