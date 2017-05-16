@@ -67,6 +67,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         int titleIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_TITLE);
         int dateIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_PUBLISHED_DATE);
         int photoIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_PHOTO_URL);
+        int aspectRatioIndex = cursor.getColumnIndex(ArticleContract.Article.COLUMN_ASPECT_RATIO);
 
         // Body is too large and was causing a TransactionTooLarge exception
         Article article = Article.builder()
@@ -75,6 +76,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
                 .title(cursor.getString(titleIndex))
                 .publishedDate(cursor.getString(dateIndex))
                 .photoUrl(cursor.getString(photoIndex))
+                .aspectRatio(cursor.getFloat(aspectRatioIndex))
                 .build();
 
         holder.setArticle(article);
@@ -84,12 +86,14 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
             holder.scrimImageView.setImageAlpha(255);
         }
 
+        holder.articleImageView.setAspectRatio(article.aspectRatio());
+
         // If we don't have a palette cached for this image then we need to generate one
         if(paletteCache.get(article.serverId()) == null) {
             Timber.d("Palette for " + article.serverId() + " was not cached for image, generating new palette.");
 
             final long key = article.serverId();
-            final ImageView imageView = holder.articleImageView;
+            final DynamicHeightImageView imageView = holder.articleImageView;
 
             Picasso.with(imageView.getContext())
                     .load(article.photoUrl())
@@ -133,7 +137,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         @BindView(R.id.tv_list_author) TextView authorTextView;
         @BindView(R.id.tv_list_date) TextView dateTextView;
         @BindView(R.id.iv_list_bottom_scrim) ImageView scrimImageView;
-        @BindView(R.id.iv_list_article_image) ImageView articleImageView;
+        @BindView(R.id.iv_list_article_image) DynamicHeightImageView articleImageView;
         @BindView(R.id.iv_list_add_favorite) ImageView favoriteImageView;
         @BindView(R.id.iv_list_share) ImageView shareImageView;
 

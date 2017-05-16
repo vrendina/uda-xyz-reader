@@ -24,11 +24,11 @@
             android:focusable="true"
             android:foreground="?selectableItemBackground">
 
-            <ImageView
+            <io.levelsoftware.xyzreader.ui.DynamicHeightImageView
                 android:id="@+id/iv_list_article_image"
                 android:transitionName="@string/transition_key_image"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/list_grid_image_height"
+                android:layout_height="0dp"
                 android:contentDescription="@string/description_article_image"
                 tools:src="@drawable/sample"
                 android:scaleType="centerCrop"

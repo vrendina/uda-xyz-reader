@@ -14,6 +14,7 @@ public abstract class Article implements Parcelable {
     // public abstract String body();
     public abstract String photoUrl();
     public abstract String publishedDate();
+    public abstract float aspectRatio();
 
     @AutoValue.Builder
     public abstract static class Builder {
@@ -23,6 +24,7 @@ public abstract class Article implements Parcelable {
 //        public abstract Builder body(String value);
         public abstract Builder photoUrl(String value);
         public abstract Builder publishedDate(String value);
+        public abstract Builder aspectRatio(float value);
         public abstract Article build();
     }
 

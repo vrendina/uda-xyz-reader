@@ -128,7 +128,8 @@ public class ArticleListActivity extends AppCompatActivity implements
                 ArticleContract.Article.COLUMN_AUTHOR,
                 ArticleContract.Article.COLUMN_TITLE,
                 ArticleContract.Article.COLUMN_PUBLISHED_DATE,
-                ArticleContract.Article.COLUMN_PHOTO_URL};
+                ArticleContract.Article.COLUMN_PHOTO_URL,
+                ArticleContract.Article.COLUMN_ASPECT_RATIO};
 
         return new CursorLoader(this,
                 ArticleContract.Article.CONTENT_URI,
