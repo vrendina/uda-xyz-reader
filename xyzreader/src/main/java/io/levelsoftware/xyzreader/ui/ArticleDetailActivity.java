@@ -65,6 +65,8 @@ public class ArticleDetailActivity extends AppCompatActivity
     private ArticleBodyAdapter adapter;
     private Article article;
 
+    private ArticleColorPalette palette;
+
     private int layoutWidth;
 
     @Override
@@ -76,9 +78,9 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         layoutWidth = getResources().getInteger(R.integer.width_breakpoint);
 
+        setupColors();
         setupData();
         setupScrollView();
-        setupColors();
         setupActionBar();
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
@@ -121,7 +123,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     }
 
     private void setupData() {
-        adapter = new ArticleBodyAdapter();
+        adapter = new ArticleBodyAdapter(palette);
         recyclerView.setAdapter(adapter);
 
         Article article = getIntent().getParcelableExtra(getString(R.string.intent_article_key));
@@ -262,8 +264,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     }
 
     private void setupColors() {
-
-        ArticleColorPalette palette = getIntent().getParcelableExtra(getString(R.string.intent_palette_key));
+        palette = getIntent().getParcelableExtra(getString(R.string.intent_palette_key));
         if (palette == null) {
             palette = ArticleColorPalette.create(this, null);
         }

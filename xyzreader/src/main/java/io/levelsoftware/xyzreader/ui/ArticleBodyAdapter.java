@@ -1,6 +1,9 @@
 package io.levelsoftware.xyzreader.ui;
 
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +18,14 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_CONTENT = 1;
 
+    ArticleColorPalette palette;
+
     private String header;
     private String[] data;
+
+    public ArticleBodyAdapter(ArticleColorPalette palette) {
+        this.palette = palette;
+    }
 
     @Override
     public ArticleBodyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,7 +68,11 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
             clean = raw.trim().replaceAll("\\r\\n| +", " ");
         }
 
-        holder.bodyContentBlock.setText(clean);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            holder.bodyContentBlock.setText(Html.fromHtml(clean, Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            holder.bodyContentBlock.setText(Html.fromHtml(clean));
+        }
     }
 
     @Override
@@ -78,6 +91,8 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
             super(view);
 
             ButterKnife.bind(this, view);
+
+            bodyContentBlock.setLinkTextColor(ColorStateList.valueOf(palette.colorHighlight()));
         }
     }
 }
